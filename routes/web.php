@@ -102,6 +102,8 @@ Route::prefix('ssh')->group(function () {
     Route::get('/keys', [SshController::class, 'listKeys'])->name('ssh.listKeys');
     Route::post('/create-key', [SshController::class, 'createKey'])->name('ssh.createKey');
     Route::post('/delete-key', [SshController::class, 'deleteKey'])->name('ssh.deleteKey');
+    Route::get('/port', [SshController::class, 'port'])->name('ssh.port');
+    Route::post('/change-port', [SshController::class, 'changePort'])->name('ssh.changePort');
 });
 
 

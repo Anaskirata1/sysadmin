@@ -8,9 +8,10 @@
             <div class="controls">
                 <button id="installBtn" class="terminal-btn"><i class="fas fa-download"></i> Install</button>
                 <button id="enableBtn" class="terminal-btn"><i class="fas fa-play"></i> Enable</button>
-                <button id="disableBtn" class="terminal-btn"><i class="fas fa-stop"></i> Disable</button>
+                <button id="disableBtn" class="terminal-btn bg-red-600"><i class="fas fa-stop"></i> Disable</button>
                 <button id="statusBtn" class="terminal-btn"><i class="fas fa-info-circle"></i> Status</button>
                 <button id="listKeysBtn" class="terminal-btn"><i class="fas fa-key"></i> List Keys</button>
+                <button id="portBtn" class="terminal-btn"><i class="fas fa-network-wired"></i> Show Port</button>
             </div>
         </div>
 
@@ -43,7 +44,7 @@
         </div>
 
         <!-- Card: Create key -->
-        <div class="card">
+        <div class="card mb-6">
             <h2 class="card-title">➕ Create New Key</h2>
             <div class="w-full flex justify-center items-center gap-4 mt-4">
                 <input type="text" id="keyNameInput"
@@ -53,6 +54,21 @@
                 <button id="createKeyBtn"
                         class="terminal-btn bg-green-600 px-6 py-2 rounded shadow hover:bg-green-700">
                     <i class="fas fa-plus-circle"></i> Create Key
+                </button>
+            </div>
+        </div>
+
+        <!-- Card: Change SSH Port -->
+        <div class="card mb-6">
+            <h2 class="card-title">⚙️ Change SSH Port</h2>
+            <div class="w-full flex justify-center items-center gap-4 mt-4">
+                <input type="number" id="portInput"
+                       placeholder="Enter New Port"
+                       class="port-input w-40 px-4 py-2 rounded border border-gray-600 bg-gray-900 text-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+
+                <button id="changePortBtn"
+                        class="terminal-btn bg-yellow-600 px-6 py-2 rounded shadow hover:bg-yellow-700">
+                    <i class="fas fa-exchange-alt"></i> Change Port
                 </button>
             </div>
         </div>
@@ -79,11 +95,11 @@
 
 /* Buttons */
 .controls {
-    display:flex;
-    gap:16px;
-    flex-wrap:wrap;
-    justify-content:center;
-    margin-bottom:16px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 16px;
 }
 .terminal-btn {
     background: linear-gradient(135deg, #3b82f6, #2563eb);
@@ -94,9 +110,9 @@
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    display:flex;
-    align-items:center;
-    gap:8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     transition: background 0.3s, transform 0.2s;
 }
@@ -107,18 +123,19 @@
 
 /* Terminal */
 .terminal {
-    background:#000000;       /* أسود */
-    color:#00ff00;            /* أخضر */
-    padding:20px;
-    border-radius:12px;
-    font-family:monospace;
-    height:300px;
-    overflow-y:auto;
-    box-shadow: inset 0 0 8px rgba(0,255,0,0.2); /* ظل داخلي أخضر خفيف */
+    background: #000000;       
+    color: #00ff00;            
+    padding: 20px;
+    border-radius: 12px;
+    font-family: monospace;
+    height: 300px;             
+    width: 100%;               
+    max-width: 100%;           
+    overflow-y: auto;          
+    overflow-x: hidden;        
+    box-shadow: inset 0 0 8px rgba(0,255,0,0.2);
     white-space: pre-wrap;
 }
-
-
 
 /* Table */
 table {
@@ -129,7 +146,8 @@ table {
 th, td {
     border: 1px solid #d1d5db;
     padding: 14px;
-    text-align: center;
+    text-align: center;        
+    vertical-align: middle;    
 }
 thead tr {
     background-color: #e5e7eb;
@@ -140,11 +158,11 @@ tbody tr:nth-child(even) {
 
 /* Inputs */
 .port-input {
-    background:#fff;
-    color:#111827;
-    border:1px solid #d1d5db;
-    padding:12px 16px;
-    border-radius:8px;
+    background: #fff;
+    color: #111827;
+    border: 1px solid #d1d5db;
+    padding: 12px 16px;
+    border-radius: 8px;
     font-size: 1rem;
     min-width: 200px;
     transition: all 0.2s ease-in-out;
@@ -155,7 +173,6 @@ tbody tr:nth-child(even) {
     outline: none;
 }
 </style>
-
 <script>
 async function callApi(url, method="GET", body=null) {
     const res = await fetch(url, {
@@ -176,38 +193,34 @@ function showOutput(text) {
     terminal.scrollTop = terminal.scrollHeight;
 }
 
-// زر Install
+// Controls
 document.getElementById('installBtn').onclick = async () => {
     const data = await callApi("{{ route('ssh.install') }}","POST");
     showOutput(data.output || "SSH Installed");
 };
 
-// زر Enable
 document.getElementById('enableBtn').onclick = async () => {
     const data = await callApi("{{ route('ssh.enable') }}","POST");
     showOutput(data.output || "SSH Enabled");
 };
 
-// زر Disable
 document.getElementById('disableBtn').onclick = async () => {
     const data = await callApi("{{ route('ssh.disable') }}","POST");
     showOutput(data.output || "SSH Disabled");
 };
 
-// زر Status
 document.getElementById('statusBtn').onclick = async () => {
     const data = await callApi("{{ route('ssh.status') }}");
     showOutput(data.output || "SSH Status");
 };
 
-// زر List Keys
 document.getElementById('listKeysBtn').onclick = async () => {
     const data = await callApi("{{ route('ssh.listKeys') }}");
     showOutput(data.output || "Keys listed");
     refreshKeys(data.output);
 };
 
-// زر Create Key
+// Keys
 document.getElementById('createKeyBtn').onclick = async () => {
     const keyName = document.getElementById('keyNameInput').value;
     if (!keyName) { showOutput("[ERROR] Enter key name"); return; }
@@ -217,7 +230,6 @@ document.getElementById('createKeyBtn').onclick = async () => {
     document.getElementById('listKeysBtn').click();
 };
 
-// تحديث جدول المفاتيح
 function refreshKeys(output) {
     const tbody = document.getElementById('keysTable');
     tbody.innerHTML = "";
@@ -241,10 +253,22 @@ function refreshKeys(output) {
     });
 }
 
-// زر Delete Key
 async function deleteKey(name) {
     const data = await callApi("{{ route('ssh.deleteKey') }}","POST",{name});
     showOutput(data.output || "Key deleted");
     document.getElementById('listKeysBtn').click();
 }
+
+// Port
+document.getElementById('portBtn').onclick = async () => {
+    const data = await callApi("{{ route('ssh.port') }}");
+    showOutput(data.output || "SSH Port");
+};
+
+document.getElementById('changePortBtn').onclick = async () => {
+    const port = document.getElementById('portInput').value;
+    if (!port) { showOutput("[ERROR] Enter port number"); return; }
+    const data = await callApi("{{ route('ssh.changePort') }}","POST",{port});
+    showOutput(data.output || "Port changed");
+};
 </script>

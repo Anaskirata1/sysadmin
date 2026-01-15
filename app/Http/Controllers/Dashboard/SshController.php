@@ -55,4 +55,28 @@ class SshController extends Controller
         $output = shell_exec("sudo /home/aya/sysadmin/ssh_delete_key.sh " . escapeshellarg($name) . " 2>&1");
         return response()->json(['output' => $output]);
     }
+    public function port()
+    {
+        $output = shell_exec("grep ^Port /etc/ssh/sshd_config 2>&1");
+        if (!$output) {
+            $output = "Default SSH port: 22";
+        }
+        return response()->json(['output' => $output]);
+    }
+
+    
+public function changePort(Request $request)
+{
+    $port = intval($request->input('port'));
+    if ($port < 1 || $port > 65535) {
+        return response()->json(['output' => "Invalid port number"]);
+    }
+
+    // تعديل السطر Port داخل الملف الأساسي
+    $cmd = "sudo sed -i 's/^Port .*/Port $port/' /etc/ssh/sshd_config && sudo systemctl restart sshd";
+    $output = shell_exec($cmd . " 2>&1");
+
+    return response()->json(['output' => "SSH port changed to $port\n" . $output]);
+}
+
 }
