@@ -8,7 +8,7 @@ use App\Http\Controllers\Dashboard\FirewallController;
 use App\Http\Controllers\Dashboard\DatabaseController;
 use App\Http\Controllers\Dashboard\SshController;
 use App\Http\Controllers\Dashboard\UserGroupController;
-
+use App\Http\Controllers\Dashboard\LogController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -113,5 +113,20 @@ Route::prefix('users-groups')->group(function () {
     Route::post('/delete-user', [UserGroupController::class, 'deleteUser'])->name('users.groups.deleteUser');
     Route::post('/delete-group', [UserGroupController::class, 'deleteGroup'])->name('users.groups.deleteGroup');
 });
+// Log
+Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
+// System
+Route::get('/logs/system', [LogController::class, 'system'])->name('logs.system');
+Route::get('/logs/auth', [LogController::class, 'auth'])->name('logs.auth');
+Route::get('/logs/kern', [LogController::class, 'kern'])->name('logs.kern');
+
+// Apache
+Route::get('/logs/apache/access', [LogController::class, 'apacheAccess'])->name('logs.apache.access');
+Route::get('/logs/apache/error', [LogController::class, 'apacheError'])->name('logs.apache.error');
+Route::get('/logs/apache/vhosts', [LogController::class, 'apacheVhosts'])->name('logs.apache.vhosts');
+
+// Laravel
+Route::get('/logs/laravel', [LogController::class, 'laravel'])->name('logs.laravel');
+
 
 require __DIR__.'/auth.php';

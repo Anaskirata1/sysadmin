@@ -75,6 +75,7 @@
         <a href="{{ route('database.index') }}"><i class="fas fa-database"></i> Database</a>
         <a href="{{ route('ssh.index') }}"><i class="fas fa-key"></i> SSH</a>
         <a href="{{ route('users.groups.index') }}"><i class="fas fa-key"></i> Users-Ubuntu</a>
+        <a href="{{ route('logs.index') }}"><i class="fas fa-key"></i> Logs</a>
 
 
     </div>
