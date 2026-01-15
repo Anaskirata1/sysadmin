@@ -27,7 +27,7 @@
                         <th class="border px-6 py-3 text-center">GID</th>
                         <th class="border px-6 py-3 text-center">Home</th>
                         <th class="border px-6 py-3 text-center">Shell</th>
-                        <th class="border px-6 py-3 text-center">Action</th>
+                        <!-- <th class="border px-6 py-3 text-center">Action</th> -->
                     </tr>
                 </thead>
                 <tbody id="usersTable">
@@ -45,7 +45,7 @@
                         <th class="border px-6 py-3 text-center">Group</th>
                         <th class="border px-6 py-3 text-center">GID</th>
                         <th class="border px-6 py-3 text-center">Members</th>
-                        <th class="border px-6 py-3 text-center">Action</th>
+                        <!-- <th class="border px-6 py-3 text-center">Action</th> -->
                     </tr>
                 </thead>
                 <tbody id="groupsTable">
@@ -80,7 +80,7 @@
         </div>
 
         <!-- Modal for root password -->
-        <div id="passwordModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+      <!--  <div id="passwordModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white p-6 rounded shadow-lg w-96">
         <h2 class="text-lg font-bold mb-4">Enter root password</h2>
         <input type="password" id="rootPassword" class="border px-4 py-2 w-full mb-4" placeholder="Password">
@@ -89,7 +89,7 @@
             <button id="confirmDeleteBtn" class="terminal-btn bg-red-600">Confirm Delete</button>
         </div>
     </div>
-    </div>
+    </div> -->
         
     @endsection
 </x-app-layout>
@@ -211,11 +211,7 @@ document.getElementById('listBtn').onclick = async () => {
                     <td>${user.gid}</td>
                     <td>${user.home}</td>
                     <td>${user.shell}</td>
-                    <td>
-                        <button class="terminal-btn bg-red-600" onclick="openDeleteModal('user','${user.username}')">
-                            <i class="fas fa-user-times"></i> Delete
-                        </button>
-                    </td>
+                    
                 </tr>
             `;
         });
@@ -233,11 +229,7 @@ document.getElementById('listBtn').onclick = async () => {
                     <td>${group.groupname}</td>
                     <td>${group.gid}</td>
                     <td>${group.members}</td>
-                    <td>
-                        <button class="terminal-btn bg-red-600" onclick="openDeleteModal('group','${group.groupname}')">
-                            <i class="fas fa-users-slash"></i> Delete
-                        </button>
-                    </td>
+                   
                 </tr>
             `;
         });
@@ -273,31 +265,4 @@ document.getElementById('createGroupBtn').onclick = async () => {
     document.getElementById('listBtn').click();
 };
 
-// إدارة الـ Modal لكلمة مرور root
-let deleteTarget = null;
-let deleteType = null;
-
-function openDeleteModal(type, target) {
-    deleteTarget = target;
-    deleteType = type;
-    document.getElementById('passwordModal').classList.remove('hidden'); // إظهار المودال
-}
-
-function closeModal() {
-    document.getElementById('passwordModal').classList.add('hidden'); // إخفاء المودال
-    document.getElementById('rootPassword').value = "";
-}
-
-document.getElementById('confirmDeleteBtn').onclick = async () => {
-    const password = document.getElementById('rootPassword').value;
-    if (!password) { alert("Password required"); return; }
-
-    let route = deleteType === "user" ? "{{ route('users.groups.deleteUser') }}" : "{{ route('users.groups.deleteGroup') }}";
-    const payload = deleteType === "user" ? {username: deleteTarget, password} : {groupname: deleteTarget, password};
-
-    const data = await callApi(route,"POST",payload);
-    showOutput(data.output);
-    closeModal();
-    document.getElementById('listBtn').click();
-};
 </script>
