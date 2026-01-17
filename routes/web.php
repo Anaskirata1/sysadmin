@@ -9,6 +9,7 @@ use App\Http\Controllers\Dashboard\DatabaseController;
 use App\Http\Controllers\Dashboard\SshController;
 use App\Http\Controllers\Dashboard\UserGroupController;
 use App\Http\Controllers\Dashboard\LogController;
+use App\Http\Controllers\Dashboard\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -130,5 +131,9 @@ Route::get('/logs/apache/vhosts', [LogController::class, 'apacheVhosts'])->name(
 // Laravel
 Route::get('/logs/laravel', [LogController::class, 'laravel'])->name('logs.laravel');
 
+// Users
 
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::post('/users', [UserController::class, 'store'])->name('users.store');
+Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 require __DIR__.'/auth.php';

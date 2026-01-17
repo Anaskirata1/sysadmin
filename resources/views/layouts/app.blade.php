@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>SysAdmin Panel</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <!-- إضافة مكتبة FontAwesome للأيقونات -->
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
@@ -76,6 +76,15 @@
         <a href="{{ route('ssh.index') }}"><i class="fas fa-key"></i> SSH</a>
         <a href="{{ route('users.groups.index') }}"><i class="fas fa-key"></i> Users-Ubuntu</a>
         <a href="{{ route('logs.index') }}"><i class="fas fa-key"></i> Logs</a>
+        <a href="{{ route('users.index') }}"><i class="fas fa-key"></i> Users</a>
+
+        <a href="{{ route('logout') }}"
+           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+           <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+        </form>
 
 
     </div>
